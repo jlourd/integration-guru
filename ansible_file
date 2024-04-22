@@ -1,0 +1,16 @@
+---
+- name: Check file for specific content
+  hosts: localhost
+  tasks:
+    - name: Check if the file exists
+      stat:
+        path: /path/to/your/file
+      register: file_stat
+
+    - name: Execute command if file exists and contains specific text
+      command: your_command_to_execute
+      when: file_stat.stat.exists and ('version' in lookup('file', '/path/to/your/file'))
+
+    - debug:
+        msg: "Command executed: {{ your_command_to_execute }}"
+      when: file_stat.stat.exists and ('version' in lookup('file', '/path/to/your/file'))
