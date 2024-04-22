@@ -14,3 +14,21 @@
     - debug:
         msg: "Command executed: {{ your_command_to_execute }}"
       when: file_stat.stat.exists and ('version' in lookup('file', '/path/to/your/file'))
+
+
+---
+- name: Check file for specific content
+  hosts: localhost
+  tasks:
+    - name: Check if the file exists and contains specific text
+      command: grep -q "version" /path/to/your/file
+      register: grep_result
+      ignore_errors: true
+
+    - name: Execute command if file exists and contains specific text
+      command: your_command_to_execute
+      when: grep_result.rc == 0
+
+    - debug:
+        msg: "Command executed: {{ your_command_to_execute }}"
+      when: grep_result.rc == 0
